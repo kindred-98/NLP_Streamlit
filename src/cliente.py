@@ -1,4 +1,4 @@
-from pathlib import Path
+import os
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -13,7 +13,7 @@ def get_client():
     
     ollama_url = "http://localhost:11434/v1"
     ollama_key = "ollama"
-    openai_key = __import__("os")..getenv("OPENAI_API_KEY")
+    openai_key = os.getenv("OPENAI_API_KEY")
     
     if _check_ollama():
         return OpenAI(base_url=ollama_url, api_key=ollama_key)
@@ -30,7 +30,7 @@ def _check_ollama() -> bool:
         sock.connect(("localhost", 11434))
         sock.close()
         return True
-    except:
+    except (socket.error, OSError):
         return False
 
 

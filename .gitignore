@@ -205,4 +205,8 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+# NLP Streamlit project
+resultados/
+logs/
+.pyrag_cache/
 Docs
