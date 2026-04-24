@@ -1,19 +1,23 @@
-"""NLP Streamlit - Módulo de análisis de texto."""
+"""NLP Streamlit - Core modules."""
 
-from src.niveles import (
-    analizar_sentimiento,
-    extraer_entidades,
-    detectar_intencion,
-    clasificar_texto,
-    resumir_texto
+from src.cliente import (
+    get_client,
+    get_modelo,
+    get_provider,
+    get_provider_name,
+    is_ollama_available,
+    Config,
+    Provider
 )
-from src.analizador import analizar_texto
+from src.config import logger
 
 __all__ = [
-    "analizar_sentimiento",
-    "extraer_entidades",
-    "detectar_intencion",
-    "clasificar_texto",
-    "resumir_texto",
-    "analizar_texto"
+    "get_client",
+    "get_modelo",
+    "get_provider",
+    "get_provider_name",
+    "is_ollama_available",
+    "Config",
+    "Provider",
+    "logger"
 ]

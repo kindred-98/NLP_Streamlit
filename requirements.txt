@@ -1,7 +1,14 @@
+# Core NLP
 openai
 python-dotenv
+
+# Web Interface
+streamlit
+
+# Testing
 pytest
 pytest-cov
+
+# Code Quality
 ruff
 bandit
-streamlit

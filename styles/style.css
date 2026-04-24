@@ -1,0 +1,82 @@
+:root {
+    --bg-main: #0b0f19;
+    --bg-secondary: #111827;
+    --bg-card: #1f2937;
+    --bg-card-blue: #1e3a5a;
+    --text-color: #ffffff;
+    --accent: #3b82f6;
+    --accent-strong: #2563eb;
+    --divider: #2a2f3a;
+}
+
+.stApp {
+    background-color: var(--bg-main);
+    color: var(--text-color);
+}
+
+section[data-testid="stSidebar"] {
+    background-color: var(--bg-secondary);
+    color: var(--text-color);
+}
+
+h1, h2, h3 {
+    color: var(--text-color);
+}
+
+div.stButton > button {
+    background-color: #ff4b4b;
+    color: white;
+    border-radius: 10px;
+    height: 50px;
+    width: 100%;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+div.stButton > button:hover {
+    background-color: #ff2e2e;
+}
+
+div[data-testid="stTextArea"] textarea {
+    background-color: var(--bg-card) !important;
+    color: var(--text-color) !important;
+    border-radius: 10px;
+}
+
+div[data-baseweb="select"] {
+    background-color: var(--bg-card) !important;
+    color: var(--text-color);
+}
+
+.card {
+    background-color: var(--bg-card);
+    padding: 15px;
+    border-radius: 12px;
+}
+
+.card-modelo {
+    background-color: var(--bg-card-blue);
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--accent);
+    margin-bottom: 10px;
+}
+
+hr {
+    border: 1px solid var(--divider);
+}
+
+div.stDataFrame {
+    border: 1px solid var(--divider);
+}
+
+div[data-testid="stExpander"] {
+    background-color: var(--bg-card);
+    border-radius: 8px;
+}
+
+div[data-testid="stMetric"] {
+    background-color: var(--bg-card);
+    padding: 10px;
+    border-radius: 8px;
+}

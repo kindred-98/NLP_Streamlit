@@ -1,117 +1,21 @@
 import streamlit as st
 from datetime import datetime
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+# Cargar estilos desde archivo externo
+css_path = Path(__file__).parent.parent / "styles" / "style.css"
+if css_path.exists():
+    with open(css_path, "r", encoding="utf-8") as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 # Config
 st.set_page_config(
     page_title="Sistema NLP",
     layout="wide"
 )
-
-# CSS Custom
-st.markdown("""
-<style>
-
-:root {
-    --bg-main: #0b0f19;
-    --bg-secondary: #111827;
-    --bg-card: #1f2937;
-    --bg-card-strong: #1e3a5a;
-    --text-color: #ffffff;
-    --accent: #3b82f6;
-    --accent-strong: #2563eb;
-}
-
-/* Fondo general */
-.stApp {
-    background-color: var(--bg-main);
-    color: var(--text-color);
-}
-
-/* Sidebar */
-section[data-testid="stSidebar"] {
-    background-color: var(--bg-secondary);
-    color: var(--text-color);
-    border-right: 1px solid #1e2533;
-}
-
-/* Títulos */
-h1, h2, h3, h4 {
-    color: var(--text-color);
-    font-weight: 600;
-}
-
-/* Botón ANALIZAR estilo rojo */
-.stButton>button {
-    background-color: #e11d48 !important;
-    color: white !important;
-    border-radius: 10px;
-    height: 50px;
-    width: 100% !important;
-    font-weight: 700;
-    font-size: 17px;
-    border: 1px solid #be123c;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: 0.2s ease-in-out;
-}
-
-/* Hover */
-.stButton>button:hover {
-    background-color: #be123c !important;
-    transform: scale(1.02);
-}
-
-/* Forzar botón al ancho del contenedor */
-div.stButton > button {
-    width: 100% !important;
-    max-width: none !important;
-}
-
-/* Textarea */
-textarea {
-    background-color: var(--bg-card) !important;
-    color: white !important;
-    border-radius: 10px !important;
-    border: 1px solid #374151 !important;
-}
-
-/* Select */
-div[data-baseweb="select"] {
-    background-color: var(--bg-card) !important;
-    color: white !important;
-    border-radius: 10px !important;
-}
-
-/* Tarjetas */
-.card {
-    background-color: var(--bg-card);
-    padding: 15px;
-    border-radius: 12px;
-    border: 1px solid var(--accent);
-    margin-bottom: 15px;
-}
-
-/* Tarjeta del modelo */
-.card-modelo {
-    background-color: var(--bg-card-strong);
-    padding: 14px;
-    border-radius: 10px;
-    border: 1px solid var(--accent);
-    margin-bottom: 15px;
-    font-size: 16px;
-    font-weight: 600;
-    text-align: center;
-}
-
-/* Línea divisoria */
-hr {
-    border: 1px solid #1e2533;
-}
-
-</style>
-""", unsafe_allow_html=True)
 
 # Sidebar
 with st.sidebar:
@@ -146,7 +50,7 @@ with col1:
     ejemplos = {
         "Consulta tecnica - Timeout en Python": "¿Alguien sabe como configurar el timeout en una conexion HTTP con Python? Estoy usando la libreria requests y a veces se queda colgado cuando el servidor tarda mas de 10 segundos.",
         "Queja de cliente": "Llevo tres dias intentando contactar con soporte y nadie responde. Mi pedido #12345 deberia haber llegado el martes y aun no ha llegado. Estoy muy molesto porque necesito el producto para un proyecto urgente.",
-        "Solicitud de informacion": "Me gustaria saber mas sobre los planes de precios de你们. Cuanto cuesta el plan profesional y que incluye?"
+        "Solicitud de informacion": "Me gustaria saber mas sobre los planes de precios de ustedes. Cuanto cuesta el plan profesional y que incluye?"
     }
     
     ejemplo_seleccionado = st.selectbox("Cargar ejemplo:", list(ejemplos.keys()))
