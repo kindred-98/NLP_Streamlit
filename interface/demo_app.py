@@ -1,9 +1,19 @@
 import streamlit as st
 from datetime import datetime
 import sys
+import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
+
+# Cargar modelo desde .env
+dotenv_path = Path(__file__).parent.parent / ".env"
+load_dotenv(dotenv_path)
+
+# Obtener modelo configurado
+MODEL = os.getenv("NLP_MODEL_OLLAMA", os.getenv("NLP_MODEL", "qwen2.5:3b"))
+PROVIDER = os.getenv("NLP_PROVIDER", "ollama").upper()
 
 # Cargar estilos desde archivo externo
 css_path = Path(__file__).parent.parent / "styles" / "style.css"
@@ -29,7 +39,7 @@ with st.sidebar:
 - 🔴 Clasificacion Multicategoria  
 """)
     st.markdown("---")
-    st.markdown('<div class="card-modelo">Modelo: qwen2.5:0.5b (Ollama)</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="card-modelo">Modelo: {MODEL} ({PROVIDER})</div>', unsafe_allow_html=True)
     st.markdown("---")
     st.markdown("**Requisito:** Ollama corriendo localmente")
     fecha = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -119,7 +129,7 @@ with col1:
 # Config
 with col2:
     st.markdown("## ⚙️ Configuracion")
-    st.markdown('<div class="card-modelo">Modelo: qwen2.5:0.5b</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="card-modelo">Modelo: {MODEL}</div>', unsafe_allow_html=True)
     guardar = st.checkbox("Guardar en logs/", value=True)
     debug = st.checkbox("Mostrar debug")
     

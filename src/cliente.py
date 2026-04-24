@@ -11,28 +11,32 @@ class Provider(Enum):
     OLLAMA = "ollama"
     OPENAI = "openai"
     HUGGINGFACE = "huggingface"
+    LMSTUDIO = "lmstudio"
 
 
 class Config:
     """Configuración centralizada."""
     
     PROVIDER = os.getenv("NLP_PROVIDER", "ollama").lower()
-    MODEL = os.getenv("NLP_MODEL", "qwen2.5:0.5b")
     
-    # Ollama
+    # Modelos por proveedor
+    MODEL_OLLAMA = os.getenv("NLP_MODEL_OLLAMA", "llama3.2")
+    MODEL_LMSTUDIO = os.getenv("NLP_MODEL_LMSTUDIO", "tinyllama-1.1b-chat-v1.0")
+    MODEL_OPENAI = os.getenv("NLP_MODEL_OPENAI", "gpt-4o-mini")
+    MODEL_HF = os.getenv("NLP_MODEL_HF", "meta-llama/Llama-3.2-8B-Instruct")
+    
+    # URLs
     OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434/v1")
-    OLLAMA_API_KEY = os.getenv("OLLAMA_API_KEY", "ollama")
-    
-    # OpenAI
-    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
-    
-    # HuggingFace
-    HF_TOKEN = os.getenv("HF_TOKEN", "")
+    LMSTUDIO_URL = os.getenv("LMSTUDIO_URL", "http://localhost:1234/v1")
     HF_ENDPOINT = os.getenv("HF_ENDPOINT", "")
+    
+    # Claves
+    OLLAMA_API_KEY = os.getenv("OLLAMA_API_KEY", "ollama")
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+    HF_TOKEN = os.getenv("HF_TOKEN", "")
 
 
 def get_provider() -> Provider:
-    """Obtiene el proveedor configurado."""
     try:
         return Provider(Config.PROVIDER)
     except ValueError:
@@ -40,10 +44,6 @@ def get_provider() -> Provider:
 
 
 def get_client() -> Any:
-    """Factory de clientes NLP.
-    
-    Retorna el cliente sesuai según la configuración.
-    """
     provider = get_provider()
     
     if provider == Provider.OLLAMA:
@@ -52,12 +52,13 @@ def get_client() -> Any:
         return _get_openai_client()
     elif provider == Provider.HUGGINGFACE:
         return _get_huggingface_client()
+    elif provider == Provider.LMSTUDIO:
+        return _get_lmstudio_client()
     
     return _get_ollama_client()
 
 
 def _get_ollama_client():
-    """Cliente para Ollama local."""
     from openai import OpenAI
     
     if not is_ollama_available():
@@ -70,7 +71,6 @@ def _get_ollama_client():
 
 
 def _get_openai_client():
-    """Cliente para OpenAI cloud."""
     from openai import OpenAI
     
     if not Config.OPENAI_API_KEY:
@@ -80,7 +80,6 @@ def _get_openai_client():
 
 
 def _get_huggingface_client():
-    """Cliente para HuggingFace Inference API."""
     from huggingface_hub import InferenceClient
     
     return InferenceClient(
@@ -89,8 +88,16 @@ def _get_huggingface_client():
     )
 
 
+def _get_lmstudio_client():
+    from openai import OpenAI
+    
+    return OpenAI(
+        base_url=Config.LMSTUDIO_URL,
+        api_key="lm-studio"
+    )
+
+
 def is_ollama_available() -> bool:
-    """Verifica si Ollama está corriendo."""
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.settimeout(2)
     try:
@@ -101,11 +108,32 @@ def is_ollama_available() -> bool:
         return False
 
 
+def is_lmstudio_available() -> bool:
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.settimeout(2)
+    try:
+        sock.connect(("localhost", 1234))
+        sock.close()
+        return True
+    except (socket.error, OSError):
+        return False
+
+
 def get_modelo() -> str:
-    """Retorna el modelo configurado."""
-    return Config.MODEL
+    """Retorna el modelo según el proveedor."""
+    provider = get_provider()
+    
+    if provider == Provider.OLLAMA:
+        return Config.MODEL_OLLAMA
+    elif provider == Provider.LMSTUDIO:
+        return Config.MODEL_LMSTUDIO
+    elif provider == Provider.OPENAI:
+        return Config.MODEL_OPENAI
+    elif provider == Provider.HUGGINGFACE:
+        return Config.MODEL_HF
+    
+    return Config.MODEL_OLLAMA
 
 
 def get_provider_name() -> str:
-    """Retorna el nombre del proveedor."""
     return get_provider().value

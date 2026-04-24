@@ -209,4 +209,10 @@ __marimo__/
 resultados/
 logs/
 .pyrag_cache/
+Docs/
+models/
+.venv/
+venv/
+__pycache__/
+*.pyc
 Docs
