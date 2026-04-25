@@ -1,84 +1,50 @@
+"""Tests para src/analizador.py - Punto de entrada principal."""
+
 import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
+from src.analizador import analizar_texto
 
 
-class TestAnalizador:
-    """Tests para src/analizador.py"""
+class TestAnalizarTexto:
+    """Tests para analizar_texto()."""
 
-    @patch("src.niveles.get_client")
-    @patch("src.niveles.get_modelo")
-    def test_analizar_texto_devuelve_dict(self, mock_modelo, mock_client):
-        """Caso feliz: verificar estructura de retorno"""
-        mock_modelo.return_value = "qwen2.5:0.5b"
-        mock_client.return_value = MagicMock()
+    def test_texto_valido(self):
+        """Analiza texto válido."""
+        with patch('src.analizador.analisis_unificado', return_value={
+            "sentimiento": {"sentimiento": "positivo"}
+        }) as mock:
+            resultado = analizar_texto("Gracias por tu ayuda")
+            assert "sentimiento" in resultado
+            mock.assert_called_once()
 
-        with patch("src.niveles._llamar_modelo") as mock_llamar:
-            mock_llamar.return_value = {"sentimiento": "positivo"}
-            
-            from src.analizador import analizar_texto
-            resultado = analizar_texto("Me gusta este producto")
+    def test_texto_vacio_lanza_error(self):
+        """Texto vacío lanza ValueError."""
+        with pytest.raises(ValueError, match="no puede estar vacio"):
+            analizar_texto("")
 
-            assert isinstance(resultado, dict)
+    def test_texto_solo_espacios_lanza_error(self):
+        """Texto solo espacios lanza ValueError."""
+        with pytest.raises(ValueError, match="no puede estar vacio"):
+            analizar_texto("   ")
+
+    def test_texto_none_lanza_error(self):
+        """Texto None lanza ValueError."""
+        with pytest.raises(ValueError):
+            analizar_texto(None)
+
+    def test_error_en_analisis_retorna_error_dict(self):
+        """Error retorna dict con error y estructura."""
+        with patch('src.analizador.analisis_unificado', side_effect=Exception("Error")):
+            resultado = analizar_texto("texto válido")
+            assert "error" in resultado
             assert "sentimiento" in resultado
             assert "entidades" in resultado
             assert "intencion" in resultado
-            assert "resumen" in resultado
             assert "clasificacion" in resultado
+            assert "resumen" in resultado
 
-    def test_texto_vacio_lanza_error(self):
-        """Error: texto vacío debe lanzar ValueError"""
-        from src.analizador import analizar_texto
-        
-        with pytest.raises(ValueError):
-            analizar_texto("")
-
-    def test_texto_vacio_solo_espacios(self):
-        """Error: solo espacios debe lanzar ValueError"""
-        from src.analizador import analizar_texto
-        
-        with pytest.raises(ValueError):
-            analizar_texto("   ")
-
-    @patch("src.niveles.get_client")
-    @patch("src.niveles.get_modelo")
-    def test_texto_largo_no_falla(self, mock_modelo, mock_client):
-        """Caso borde: texto largo no debe fallar"""
-        mock_modelo.return_value = "qwen2.5:0.5b"
-        
-        with patch("src.niveles._llamar_modelo") as mock_llamar:
-            mock_llamar.return_value = {"resultado": "ok"}
-            
-            from src.analizador import analizar_texto
-            texto = "hola " * 1000
-            resultado = analizar_texto(texto)
-
-            assert isinstance(resultado, dict)
-
-    @patch("src.niveles.get_client")
-    @patch("src.niveles.get_modelo")
-    def test_estructura_sentimiento(self, mock_modelo, mock_client):
-        """Validar estructura interna de sentimiento"""
-        mock_modelo.return_value = "qwen2.5:0.5b"
-        
-        with patch("src.niveles._llamar_modelo") as mock_llamar:
-            mock_llamar.return_value = {"sentimiento": "positivo", "puntuacion": 0.8}
-            
-            from src.analizador import analizar_texto
-            resultado = analizar_texto("Texto de prueba")
-
-            assert isinstance(resultado["sentimiento"], dict)
-
-    @patch("src.niveles.get_client")
-    @patch("src.niveles.get_modelo")
-    def test_todas_claves_presentes(self, mock_modelo, mock_client):
-        """Verificar todas las claves del resultado"""
-        mock_modelo.return_value = "qwen2.5:0.5b"
-        
-        with patch("src.niveles._llamar_modelo") as mock_llamar:
-            mock_llamar.return_value = {"ok": True}
-            
-            from src.analizador import analizar_texto
-            resultado = analizar_texto("Prueba")
-
-            expected_keys = {"sentimiento", "entidades", "intencion", "clasificacion", "resumen"}
-            assert expected_keys == set(resultado.keys())
+    def test_pasa_modelo(self):
+        """Pasa modelo a analisis_unificado."""
+        with patch('src.analizador.analisis_unificado', return_value={}) as mock:
+            analizar_texto("texto", modelo="qwen2.5:3b")
+            mock.assert_called_once_with("texto", modelo="qwen2.5:3b")

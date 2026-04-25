@@ -205,7 +205,7 @@ def _analisis_individual(texto: str, modelo: str = None) -> dict:
             try:
                 result, nombre = future.result()
                 resultados[nombre] = result
-            except Exception:
-                resultados[nombre] = {}
+            except Exception as e:
+                resultados["error"] = {"error": str(e)}
     
     return resultados
