@@ -45,7 +45,7 @@ def limpiar_respuesta_json(contenido: str) -> dict:
         if json_lines:
             texto_json = '\n'.join(json_lines)
             return json.loads(texto_json)
-    except:
+    except Exception:
         pass
     
     # 6. Si no se puede parsear, devolver lo queTenemos
@@ -55,8 +55,26 @@ def limpiar_respuesta_json(contenido: str) -> dict:
 def parsear_respuesta_fallback(texto: str) -> dict:
     """Intenta extraer campos conocidos del texto."""
     resultado = {}
+    texto = texto.strip()
     
-    # Mapeo de campos comunes
+    # Si viene estilo "campo: valor | campo2: valor2"
+    if '|' in texto:
+        for parte in texto.split('|'):
+            parte = parte.strip()
+            if ':' in parte:
+                campo, valor = parte.split(':', 1)
+                campo = campo.strip().lower()
+                valor = valor.strip()
+                # Limpiar comillas y corchetes
+                valor = valor.strip("[]'\"").replace("'", "")
+                if valor.isdigit():
+                    valor = float(valor) if '.' in valor else int(valor)
+                resultado[campo] = valor
+    
+    if resultado:
+        return resultado
+    
+    # Mapeo de campos comunes - regex
     campos = {
         'sentimiento': r'sentimiento["\s]*:["\s]*(\w+)',
         'puntuacion': r'puntuacion["\s]*:["\s]*([0-9.]+)',
@@ -81,7 +99,7 @@ def parsear_respuesta_fallback(texto: str) -> dict:
     if resultado:
         return resultado
     
-    return {"error": "Respuesta no parseable", "raw": texto[:500]}
+    return {"raw": texto[:500]}
 
 
 def validar_texto(texto: str) -> bool:

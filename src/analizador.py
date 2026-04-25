@@ -1,50 +1,27 @@
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from src.niveles import (
-    analizar_sentimiento,
-    extraer_entidades,
-    detectar_intencion,
-    clasificar_texto,
-    resumir_texto
-)
+from src.niveles import analisis_unificado
 
 
-def analizar_texto(texto: str) -> dict:
-    """Orquesta todos los análisis NLP en paralelo.
+def analizar_texto(texto: str, modelo: str = None) -> dict:
+    """Analisis rapido en 1 llamada.
     
     Args:
         texto: Texto a analizar
+        modelo: Modelo a usar (opcional)
         
     Returns:
-        dict: Resultados de todos los análisis
+        dict: Resultados del analisis
     """
     if not texto or not texto.strip():
         raise ValueError("El texto no puede estar vacio")
     
-    resultados = {}
-    errores = {}
-    
-    # Tareas a ejecutar en paralelo
-    tareas = {
-        "sentimiento": lambda: analizar_sentimiento(texto),
-        "entidades": lambda: extraer_entidades(texto),
-        "intencion": lambda: detectar_intencion(texto),
-        "clasificacion": lambda: clasificar_texto(texto),
-        "resumen": lambda: resumir_texto(texto)
-    }
-    
-    # Ejecutar en paralelo (máximo 3 hilos simultáneos)
-    with ThreadPoolExecutor(max_workers=3) as executor:
-        futures = {
-            executor.submit(tarea): nombre 
-            for nombre, tarea in tareas.items()
+    try:
+        return analisis_unificado(texto, modelo=modelo)
+    except Exception as e:
+        return {
+            "error": str(e),
+            "sentimiento": {},
+            "entidades": {},
+            "intencion": {},
+            "clasificacion": {},
+            "resumen": {}
         }
-        
-        for future in as_completed(futures):
-            nombre = futures[future]
-            try:
-                resultados[nombre] = future.result()
-            except Exception as e:
-                errores[nombre] = str(e)
-                resultados[nombre] = {"error": str(e)}
-    
-    return resultados

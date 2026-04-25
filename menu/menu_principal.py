@@ -64,10 +64,10 @@ def mostrar_menu():
     print("🧠  SISTEMA NLP - MENÚ PRINCIPAL")
     print("=" * 50)
     print("\nSelecciona una opción:")
-    print("  1️⃣  GUI (Streamlit)     - Interfaz web")
-    print("  2️⃣  CLI               - Línea de comandos")
-    print("  3️⃣  ElegirModelo     - Cambiar modelo")
-    print("  4️⃣  Salir            - Salir del programa")
+    print("  1️⃣  GUI (Streamlit)")
+    print("  2️⃣  CLI")
+    print("  3️⃣  ElegirModelo")
+    print("  4️⃣  Salir")
     print("\n" + "-" * 50)
 
 

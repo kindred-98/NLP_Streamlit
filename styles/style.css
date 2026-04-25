@@ -1,31 +1,108 @@
-:root {
+/* Base styles */
+.stApp {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+section[data-testid="stSidebar"] {
+    transition: background-color 0.3s ease;
+}
+
+/* Theme detection and application via JavaScript */
+
+[data-theme="dark"] {
     --bg-main: #0b0f19;
     --bg-secondary: #111827;
     --bg-card: #1f2937;
     --bg-card-blue: #1e3a5a;
     --text-color: #ffffff;
     --accent: #3b82f6;
-    --accent-strong: #2563eb;
     --divider: #2a2f3a;
 }
 
-.stApp {
-    background-color: var(--bg-main);
-    color: var(--text-color);
+[data-theme="dark"] .stApp {
+    background-color: #0b0f19;
+    color: #ffffff;
 }
 
-section[data-testid="stSidebar"] {
-    background-color: var(--bg-secondary);
-    color: var(--text-color);
+[data-theme="dark"] section[data-testid="stSidebar"] {
+    background-color: #111827;
+    color: #ffffff;
 }
 
-h1, h2, h3 {
-    color: var(--text-color);
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3 {
+    color: #ffffff;
 }
 
-div.stButton > button {
-    background-color: #ff4b4b;
-    color: white;
+[data-theme="dark"] div[data-testid="stTextArea"] textarea {
+    background-color: #1f2937 !important;
+    color: #ffffff !important;
+    border-color: #2a2f3a !important;
+}
+
+[data-theme="dark"] div[data-baseweb="select"] > div,
+[data-theme="dark"] .stSelectbox > div > div > div {
+    background-color: #1f2937 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .card-modelo {
+    background-color: #1e3a5a;
+    color: #ffffff;
+    border-color: #3b82f6;
+}
+
+/* Light theme */
+[data-theme="light"] {
+    --bg-main: #ffffff;
+    --bg-secondary: #f0f2f6;
+    --bg-card: #fafafa;
+    --bg-card-blue: #e3f2fd;
+    --text-color: #1f2937;
+    --accent: #0066cc;
+    --divider: #e0e0e0;
+}
+
+[data-theme="light"] .stApp {
+    background-color: #ffffff;
+    color: #1f2937;
+}
+
+[data-theme="light"] section[data-testid="stSidebar"] {
+    background-color: #f0f2f6;
+    color: #1f2937;
+}
+
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3 {
+    color: #1f2937;
+}
+
+[data-theme="light"] div[data-testid="stTextArea"] textarea {
+    background-color: #fafafa !important;
+    color: #1f2937 !important;
+    border-color: #e0e0e0 !important;
+}
+
+[data-theme="light"] div[data-baseweb="select"] > div,
+[data-theme="light"] .stSelectbox > div > div > div {
+    background-color: #fafafa !important;
+    color: #1f2937 !important;
+}
+
+[data-theme="light"] .card-modelo {
+    background-color: #e3f2fd;
+    color: #1f2937;
+    border-color: #0066cc;
+}
+
+/* Buttons - always red */
+div.stButton > button,
+div[data-testid="stFormSubmitButton"] > button {
+    background-color: #ff4b4b !important;
+    color: white !important;
     border-radius: 10px;
     height: 50px;
     width: 100%;
@@ -33,50 +110,54 @@ div.stButton > button {
     font-size: 16px;
 }
 
-div.stButton > button:hover {
-    background-color: #ff2e2e;
+div.stButton > button:hover,
+div[data-testid="stFormSubmitButton"] > button:hover {
+    background-color: #ff2e2e !important;
 }
 
-div[data-testid="stTextArea"] textarea {
-    background-color: var(--bg-card) !important;
-    color: var(--text-color) !important;
-    border-radius: 10px;
-}
-
-div[data-baseweb="select"] {
-    background-color: var(--bg-card) !important;
-    color: var(--text-color);
-}
-
+/* Cards */
 .card {
     background-color: var(--bg-card);
     padding: 15px;
     border-radius: 12px;
 }
 
-.card-modelo {
-    background-color: var(--bg-card-blue);
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid var(--accent);
-    margin-bottom: 10px;
-}
-
+/* Divider */
 hr {
     border: 1px solid var(--divider);
 }
 
-div.stDataFrame {
-    border: 1px solid var(--divider);
+[data-theme="dark"] hr {
+    border-color: #2a2f3a;
 }
 
+[data-theme="light"] hr {
+    border-color: #e0e0e0;
+}
+
+/* Expander */
 div[data-testid="stExpander"] {
-    background-color: var(--bg-card);
     border-radius: 8px;
 }
 
+[data-theme="dark"] div[data-testid="stExpander"] {
+    background-color: #1f2937;
+}
+
+[data-theme="light"] div[data-testid="stExpander"] {
+    background-color: #fafafa;
+}
+
+/* Metric */
 div[data-testid="stMetric"] {
-    background-color: var(--bg-card);
     padding: 10px;
     border-radius: 8px;
+}
+
+[data-theme="dark"] div[data-testid="stMetric"] {
+    background-color: #1f2937;
+}
+
+[data-theme="light"] div[data-testid="stMetric"] {
+    background-color: #fafafa;
 }
