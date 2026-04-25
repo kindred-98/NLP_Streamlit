@@ -1,6 +1,5 @@
 from pathlib import Path
 import json
-from datetime import datetime
 
 RESULTADOS_DIR = Path("resultados")
 CARPETA_JSON = RESULTADOS_DIR / "json"
@@ -28,7 +27,7 @@ def listar_analisis() -> list:
                 "timestamp": data.get("timestamp"),
                 "texto": data.get("texto", "")[:100]
             })
-        except:
+        except Exception:
             continue
     return analisis
 

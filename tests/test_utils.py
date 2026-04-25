@@ -1,5 +1,3 @@
-import pytest
-import json
 from src.utils import limpiar_respuesta_json, validar_texto, formatear_resultado
 
 
@@ -37,23 +35,23 @@ class TestUtils:
 
     def test_validar_texto_valido(self):
         """Caso feliz: texto válido"""
-        assert validar_texto("Texto de prueba válido") == True
+        assert validar_texto("Texto de prueba válido")
 
     def test_validar_texto_vacio(self):
         """Error: texto vacío"""
-        assert validar_texto("") == False
+        assert not validar_texto("")
 
     def test_validar_texto_solo_espacios(self):
         """Error: solo espacios"""
-        assert validar_texto("   ") == False
+        assert not validar_texto("   ")
 
     def test_validar_texto_muy_corto(self):
         """Error: texto muy corto (< 4 chars)"""
-        assert validar_texto("ab") == False
+        assert not validar_texto("ab")
 
     def test_validar_texto_exacto_minimo(self):
         """Caso borde: texto con 4 caracteres"""
-        assert validar_texto("abcd") == True
+        assert validar_texto("abcd")
 
     def test_formatear_resultado(self):
         """Caso feliz: formatear dict"""
