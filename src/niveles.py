@@ -1,54 +1,41 @@
 from src.cliente import get_client, get_modelo, get_provider_name
 from src.utils import limpiar_respuesta_json
 
-PROMPT_SENTIMIENTO = """Analiza el sentimiento del texto. Responde UNICAMENTE en formato JSON con:
-- sentimiento: positivo, negativo o neutral
-- puntuacion: numero del 0 al 1
-- emociones: lista de emociones detectadas
-- confianza: numero del 0 al 1"""
+PROMPT_SENTIMIENTO = """Responde SIEMPRE asi: {"sentimiento":"valor","puntuacion":0.0,"emociones":["a"],"confianza":0.0}
+Valor de sentimiento debe ser: positivo, negativo o neutral
+Valor de puntuacion entre 0 y 1
+Valor de emociones entre corchetes
+Ejemplo para pergunta técnica: {"sentimiento":"neutral","puntuacion":0.5,"emociones":["curiosidad"],"confianza":0.8}"""
 
-PROMPT_ENTIDADES = """Extrae todas las entidades del texto. Responde UNICAMENTE en formato JSON con:
-- personas: lista de nombres de personas
-- organizaciones: lista de empresas/instituciones
-- lugares: lista de ubicaciones
-- fechas: lista de fechas mencionadas
-- cantidades: lista de numeros y precios
-- otros: otros identificadores relevantes"""
+PROMPT_ENTIDADES = """Responde SIEMPRE asi: {"personas":[],"organizaciones":[],"lugares":[],"fechas":[],"cantidades":[],"otros":[]}
+Si mentionas Python, requests, HTTP, agregar a "otros"
+Ejemplo: {"personas":[],"organizaciones":["empresa X"],"lugares":[],"fechas":["hoy"],"cantidades":["10"],"otros":["Python","HTTP","timeout"]}"""
 
-PROMPT_INTENCION = """Detecta la intension del usuario. Responde UNICAMENTE en formato JSON con:
-- intencion_principal: una de [informacion, compra, soporte, queja, sugerencia, otro]
-- subcategoria: mas especifica
-- urgencia: alta, media, baja
-- accion_sugerida: que deberia hacer la aplicacion"""
+PROMPT_INTENCION = """Responde SIEMPRE asi: {"intencion_principal":"","subcategoria":"","urgencia":"","accion_sugerida":""}
+Urgencia debe ser: alta, media o baja
+Intencion principal debe ser: informacion, compra, soporte, queja, sugerencia
+Ejemplo pregunta técnica: {"intencion_principal":"informacion","subcategoria":"ayuda tecnica","urgencia":"media","accion_sugerida":"responder"}"""
 
-PROMPT_CLASIFICACION = """Clasifica el texto en las siguientes categorias. Responde UNICAMENTE en formato JSON con:
-- tema: tecnico, facturacion, cuenta, producto, servicio_cliente, otro
-- tipo: pregunta, queja, sugerencia, informacion, solicitud
-- canal_adecuado: email, chat, telefono, automatico
-- prioridad: 1 (urgente) a 5 (sin urgencia)"""
+PROMPT_CLASIFICACION = """Responde SIEMPRE asi: {"tema":"","tipo":"","canal_adecuado":"","prioridad":3}
+Tema debe ser: tecnico, facturacion, cuenta, producto, servicio_cliente, otro
+Tipo debe ser: pregunta, queja, sugerencia, informacion, solicitud
+Canal debe ser: email, chat, telefono, automatico
+Prioridad entre 1 y 5
+Ejemplo pregunta técnica: {"tema":"tecnico","tipo":"pregunta","canal_adecuado":"chat","prioridad":3}"""
 
-PROMPT_RESUMEN = {
-    "ultracorto": "Resume en UNA frase corta.",
-    "medio": "Resume en 3 puntos clave.",
-    "detallado": "Haz un resumen estructurado con introduccion, desarrollo y conclusion."
-}
-
-PROMPT_RESUMEN_MEDIO = "Resume el texto en 3 puntos clave."
+PROMPT_RESUMEN_MEDIO = "Responde solo con el resumen en maximo 3 frases."
 
 # Prompt unificado para analisis completo en 1 llamada
-PROMPT_UNIFICADO = """Analiza el siguiente texto y devuelve UNICAMENTE un JSON con:
+PROMPT_UNIFICADO = """Analiza el siguiente texto y devuelve SOLO JSON con los campos exactos, sin texto adicional:
+{"sentimiento": "positivo|negativo|neutral", "puntuacion": 0.0, "emociones": [], "confianza": 0.0}
+{"personas": [], "organizaciones": [], "lugares": [], "fechas": [], "cantidades": [], "otros": []}
+{"intencion_principal": "", "subcategoria": "", "urgencia": "", "accion_sugerida": ""}
+{"tema": "", "tipo": "", "canal_adecuado": "", "prioridad": 1}
+{"resumen": ""}
+Responde SOLO JSON, sin explicaciones."""
 
-1. SENTIMIENTO (sentimiento, puntuacion 0-1, emociones, confianza 0-1)
-2. ENTIDADES (personas, organizaciones, lugares, fechas, cantidades, otros)
-3. INTENCION (intencion_principal, subcategoria, urgencia, accion_sugerida)
-4. CLASIFICACION (tema, tipo, canal_adecuado, prioridad 1-5)
-5. RESUMEN (ultracorto, medio, detallado)
-
-Responde SOLO con JSON valido, sin texto adicional."""
-
-# Cache para evitar analisis repetidos (se limpia automaticamente)
+# Cache desactivado temporalmente
 _cache = {}
-_cache_modelo = None  # Para limpiar cache al cambiar modelo
 
 
 def _es_respuesta_invalida(resultado: dict) -> bool:
@@ -146,12 +133,7 @@ def analisis_unificado(texto: str, modelo: str = None) -> dict:
     Returns:
         dict con sentimiento, entidades, intencion, clasificacion, resumen
     """
-    # Limpiar cache si cambio modelo
-    global _cache_modelo
-    if _cache_modelo != modelo:
-        _cache = {}
-        _cache_modelo = modelo
-    
+    # Cache desactivado - siempre analizar
     # Verificar cache
     texto_hash = hash(texto)
     if texto_hash in _cache:

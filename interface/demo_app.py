@@ -1,5 +1,4 @@
 import streamlit as st
-import streamlit.components.v1 as components
 import time
 import sys
 import os
@@ -33,7 +32,6 @@ theme_script = """
         var html = document.documentElement;
         var body = document.body;
         
-        // Detectar si el fondo es oscuro
         var bgColor = getComputedStyle(body).backgroundColor;
         var rgb = bgColor.match(/\\d+/g);
         
@@ -53,7 +51,6 @@ theme_script = """
         subtree: true 
     });
     
-    // Ejecutar inmediatamente
     var bgColor = getComputedStyle(document.body).backgroundColor;
     var rgb = bgColor.match(/\\d+/g);
     if (rgb && rgb.length >= 3) {
@@ -63,8 +60,7 @@ theme_script = """
 })();
 </script>
 """
-
-components.html(theme_script, height=0)
+st.markdown(theme_script, unsafe_allow_html=True)
 
 
 # Constantes
@@ -85,7 +81,6 @@ def formatear_valor(valor):
         if not valor:
             return "N/A"
         
-        # Si es un dict anidado (como {"sentimiento": {...}})
         for key, val in valor.items():
             if isinstance(val, dict):
                 partes = []
@@ -97,7 +92,6 @@ def formatear_valor(valor):
                             partes.append(f"{k}: {v}")
                 return " | ".join(partes) if partes else "N/A"
         
-        # Dict normal
         partes = []
         for k, v in valor.items():
             if v and k not in ["error", "raw"]:
@@ -114,8 +108,6 @@ def formatear_valor(valor):
     
     if valor is None or valor == "":
         return "N/A"
-    
-    return str(valor)
     
     return str(valor)
 
@@ -295,12 +287,8 @@ with col1:
                 from src.analizador import analizar_texto
                 from almacenamiento.guardar import guardar_resultado
                 
-                # Usar el modelo seleccionado
-                modelo_a_usar = modelo_seleccionado
-                st.session_state.modelo_actual = modelo_a_usar
-                
                 inicio = time.time()
-                resultados = analizar_texto(texto, modelo=modelo_a_usar)
+                resultados = analizar_texto(texto, modelo=modelo_seleccionado)
                 st.session_state.resultados = resultados
                 if guardar:
                     guardar_resultado(texto, resultados)
