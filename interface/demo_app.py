@@ -1,7 +1,8 @@
 import streamlit as st
-from datetime import datetime
+import time
 import sys
 import os
+from datetime import datetime
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -11,7 +12,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 dotenv_path = Path(__file__).parent.parent / ".env"
 load_dotenv(dotenv_path)
 
-# Obtener modelo configurado
+# Obtener modelo y provider configurados
 MODEL = os.getenv("NLP_MODEL_OLLAMA", os.getenv("NLP_MODEL", "qwen2.5:3b"))
 PROVIDER = os.getenv("NLP_PROVIDER", "ollama").upper()
 
@@ -27,23 +28,48 @@ st.set_page_config(
     layout="wide"
 )
 
-# Sidebar
+
+def formatear_valor(valor):
+    """Formatea un valor para que sea legible."""
+    if isinstance(valor, list):
+        if not valor:
+            return "N/A"
+        # Si es lista de strings simples
+        if all(isinstance(v, str) for v in valor):
+            return ", ".join(valor)
+        # Si es lista de dicts
+        if all(isinstance(v, dict) for v in valor):
+            return ", ".join([str(v) for v in valor])
+        return ", ".join([str(v) for v in valor])
+    elif isinstance(valor, dict):
+        if not valor:
+            return "N/A"
+        partes = []
+        for k, v in valor.items():
+            if v:
+                partes.append(f"{k}: {v}")
+        return " | ".join(partes) if partes else "N/A"
+    elif valor is None or valor == "":
+        return "N/A"
+    else:
+        return str(valor)
+
+# Sidebar - con modelo card y fecha/hora
 with st.sidebar:
-    st.markdown("## 📄 Información")
-    st.markdown("### Capacidades demostradas:")
+    st.markdown("## 📄 Informacion")
+    st.markdown("### Capacidades:")
     st.markdown("""
-- 🔵 Analisis de Sentimiento  
-- 🟢 Extraccion de Entidades (NER)  
-- 🟡 Deteccion de Intencion  
-- 🟠 Resumen (3 niveles)  
-- 🔴 Clasificacion Multicategoria  
+- 🔵 Sentimiento  
+- 🟢 Entidades (NER)  
+- 🟡 Intencion  
+- 🟠 Resumen  
+- 🔴 Clasificacion  
 """)
     st.markdown("---")
-    st.markdown(f'<div class="card-modelo">Modelo: {MODEL} ({PROVIDER})</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="card-modelo">Modelo: {MODEL}</div>', unsafe_allow_html=True)
     st.markdown("---")
     st.markdown("**Requisito:** Ollama corriendo localmente")
-    fecha = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    st.markdown(f"📅 {fecha}")
+    st.caption(f"📅 {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
 # Header
 st.markdown("# 🧠 Sistema de Analisis NLP")
@@ -83,53 +109,61 @@ with col1:
                 from almacenamiento.guardar import guardar_resultado
                 from src.utils import formatear_resultado
                 
+                # Iniciar cronómetro
+                inicio = time.time()
+                
                 with st.spinner("Analizando..."):
                     resultados = analizar_texto(texto)
                     guardar_resultado(texto, resultados)
                 
-                st.success("✅ Analisis completado y guardado automaticamente")
+                # Tiempo de análisis
+                duracion = time.time() - inicio
+                
+                st.success(f"✅ Analisis completado en {duracion:.2f}s")
                 
                 tabs = st.tabs(["Sentimiento", "Entidades", "Intencion", "Resumen", "Clasificacion"])
                 
                 with tabs[0]:
                     sent = resultados.get("sentimiento", {})
-                    st.markdown(f"**Sentimiento:** {sent.get('sentimiento', 'N/A')}")
-                    st.markdown(f"**Puntuacion:** {sent.get('puntuacion', 'N/A')}")
-                    st.markdown(f"**Emociones:** {sent.get('emociones', 'N/A')}")
-                    st.markdown(f"**Confianza:** {sent.get('confianza', 'N/A')}")
+                    st.markdown(f"**Sentimiento:** {formatear_valor(sent.get('sentimiento'))}")
+                    st.markdown(f"**Puntuacion:** {formatear_valor(sent.get('puntuacion'))}")
+                    st.markdown(f"**Emociones:** {formatear_valor(sent.get('emociones'))}")
+                    st.markdown(f"**Confianza:** {formatear_valor(sent.get('confianza'))}")
                 
                 with tabs[1]:
                     ents = resultados.get("entidades", {})
                     for key, val in ents.items():
                         if val:
-                            st.markdown(f"**{key.capitalize()}:** {val}")
+                            st.markdown(f"**{key.capitalize()}:** {formatear_valor(val)}")
                 
                 with tabs[2]:
                     inte = resultados.get("intencion", {})
                     for key, val in inte.items():
                         if val:
-                            st.markdown(f"**{key}:** {val}")
+                            st.markdown(f"**{key}:** {formatear_valor(val)}")
                 
                 with tabs[3]:
                     res = resultados.get("resumen", {})
                     for nivel, contenido in res.items():
-                        st.markdown(f"**{nivel}:** {contenido}")
+                        if isinstance(contenido, dict) and contenido.get('error'):
+                            st.markdown(f"**{nivel}:** {contenido.get('error', 'N/A')}")
+                        else:
+                            st.markdown(f"**{nivel}:** {formatear_valor(contenido)}")
                 
                 with tabs[4]:
                     clas = resultados.get("clasificacion", {})
                     for key, val in clas.items():
                         if val:
-                            st.markdown(f"**{key}:** {val}")
+                            st.markdown(f"**{key}:** {formatear_valor(val)}")
                             
             except Exception as e:
                 st.error(f"❌ Error: {str(e)}")
         else:
             st.warning("Por favor, introduce un texto para analizar.")
 
-# Config
+# Config - simplificado
 with col2:
     st.markdown("## ⚙️ Configuracion")
-    st.markdown(f'<div class="card-modelo">Modelo: {MODEL}</div>', unsafe_allow_html=True)
     guardar = st.checkbox("Guardar en logs/", value=True)
     debug = st.checkbox("Mostrar debug")
     

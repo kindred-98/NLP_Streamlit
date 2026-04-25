@@ -208,10 +208,7 @@ __marimo__/
 # NLP Streamlit project
 resultados/
 logs/
-.pyrag_cache/
 Docs/
-models/
-.venv/
 venv/
 __pycache__/
 *.pyc

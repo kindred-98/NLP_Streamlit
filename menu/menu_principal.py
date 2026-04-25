@@ -8,9 +8,8 @@ load_dotenv()
 
 
 MODELOS = {
-    "1": ("qwen2.5:3b", "Qwen 2.5 - Más rápido (1.9 GB)"),
+    "1": ("qwen2.5:3b", "Qwen 2.5 - Mas rapido (1.9 GB)"),
     "2": ("llama3.2", "Llama 3.2 - Mejor calidad (2.0 GB)"),
-    "3": ("mistral", "Mistral - Balance (4.4 GB)"),
 }
 
 
@@ -26,7 +25,7 @@ def mostrar_menu_modelos():
 def seleccionar_modelo() -> str:
     """Permite seleccionar el modelo."""
     mostrar_menu_modelos()
-    opcion = input("Modelo [1-3]: ").strip()
+    opcion = input("Modelo [1-2]: ").strip()
     
     if opcion in MODELOS:
         modelo = MODELOS[opcion][0]
