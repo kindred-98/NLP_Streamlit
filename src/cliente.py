@@ -66,7 +66,8 @@ def _get_ollama_client():
     
     return OpenAI(
         base_url=Config.OLLAMA_URL,
-        api_key=Config.OLLAMA_API_KEY
+        api_key=Config.OLLAMA_API_KEY,
+        timeout=120.0  # 2 minutos timeout
     )
 
 
