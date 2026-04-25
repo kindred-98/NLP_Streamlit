@@ -31,28 +31,31 @@ st.set_page_config(
 
 def formatear_valor(valor):
     """Formatea un valor para que sea legible."""
-    if isinstance(valor, list):
-        if not valor:
-            return "N/A"
-        # Si es lista de strings simples
-        if all(isinstance(v, str) for v in valor):
-            return ", ".join(valor)
-        # Si es lista de dicts
-        if all(isinstance(v, dict) for v in valor):
-            return ", ".join([str(v) for v in valor])
-        return ", ".join([str(v) for v in valor])
-    elif isinstance(valor, dict):
+    # Si es dict con error y raw, devolver el raw limpio
+    if isinstance(valor, dict):
+        if valor.get("raw"):
+            texto = valor.get("raw", "")
+            texto = texto.replace("\n", " ").replace("  ", " ").strip()
+            return texto[:250] + ("..." if len(texto) > 250 else "")
+        if valor.get("error"):
+            return "No disponible"
         if not valor:
             return "N/A"
         partes = []
         for k, v in valor.items():
-            if v:
+            if v and k not in ["error", "raw"]:
                 partes.append(f"{k}: {v}")
         return " | ".join(partes) if partes else "N/A"
-    elif valor is None or valor == "":
+    
+    if isinstance(valor, list):
+        if not valor:
+            return "N/A"
+        return ", ".join([str(v) for v in valor])
+    
+    if valor is None or valor == "":
         return "N/A"
-    else:
-        return str(valor)
+    
+    return str(valor)
 
 # Sidebar - con modelo card y fecha/hora
 with st.sidebar:
@@ -145,10 +148,7 @@ with col1:
                 with tabs[3]:
                     res = resultados.get("resumen", {})
                     for nivel, contenido in res.items():
-                        if isinstance(contenido, dict) and contenido.get('error'):
-                            st.markdown(f"**{nivel}:** {contenido.get('error', 'N/A')}")
-                        else:
-                            st.markdown(f"**{nivel}:** {formatear_valor(contenido)}")
+                        st.markdown(f"**{nivel}:** {formatear_valor(contenido)}")
                 
                 with tabs[4]:
                     clas = resultados.get("clasificacion", {})
