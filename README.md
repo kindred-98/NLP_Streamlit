@@ -29,10 +29,14 @@ pip install -r requirements.txt
 ollama serve
 
 # 3. Correr la app
+# Opción A: Interfaz web (recomendado)
 streamlit run interface/demo_app.py
-```
+# Abre: http://localhost:8501
 
-¿Fácil?:_arrow_right: Abre **http://localhost:8501** y listo.
+# Opción B: CLI con menú interactivo
+python main.py
+# Menú: GUI, CLI, Elegir Modelo, Salir
+```
 
 ---
 
