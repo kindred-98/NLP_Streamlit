@@ -2,26 +2,20 @@
 
 _Aplicación web de procesamiento de lenguaje natural (NLP) con modelo local usando Ollama and Streamlit._
 
-[![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue)](https://www.python.org)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.0%2B-red)](https://streamlit.io)
-[![Version](https://img.shields.io/badge/Version-1.0.0-blue)](https://github.com/[TU-USUARIO]/NLP_Streamlit)
-[![Tests](https://img.shields.io/badge/Tests-143%20passed-green)](https://pytest.org)
-[![Coverage](https://img.shields.io/badge/coverage-96%25-green)](https://coverage.io)
-[![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
-[![CI](https://github.com/[TU-USUARIO]/NLP_Streamlit/actions/workflows/ci.yml/badge.svg)](https://github.com/[TU-USUARIO]/NLP_Streamlit/actions)
+![Python](https://img.shields.io/badge/Python-3.10%7C3.11%7C3.12%7C3.13-blue)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.0%2B-red)
+![Version](https://img.shields.io/badge/Version-1.0.0-blue)
+![Tests](https://img.shields.io/badge/Tests-143%20passed-green)
+![Coverage](https://img.shields.io/badge/coverage-96%25-green)
+![License](https://img.shields.io/badge/License-MIT-blue)
 
 ---
 
 ## 📸 Demo
 
-| Interfaz Streamlit |
-|------------------|
-| ![Demo](Docs/InterfazNueva.png) |
+![Demo de la aplicación](InterfazNueva.png)
 
 _Screenshot de la interfaz en acción_
-
-<!-- Vista remota (GitHub): -->
-<!-- ![Demo](https://raw.githubusercontent.com/tu-usuario/NLP_Streamlit/main/Docs/InterfazNueva.png) -->
 
 ---
 
