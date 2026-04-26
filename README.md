@@ -4,17 +4,24 @@ _Aplicación web de procesamiento de lenguaje natural (NLP) con modelo local usa
 
 [![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue)](https://www.python.org)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.0%2B-red)](https://streamlit.io)
-[![Version](https://img.shields.io/badge/Version-1.0.0-blue)](https://github.com/tu-usuario/NLP_Streamlit)
+[![Version](https://img.shields.io/badge/Version-1.0.0-blue)](https://github.com/[TU-USUARIO]/NLP_Streamlit)
 [![Tests](https://img.shields.io/badge/Tests-143%20passed-green)](https://pytest.org)
 [![Coverage](https://img.shields.io/badge/coverage-96%25-green)](https://coverage.io)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
-[![CI](https://github.com/tu-usuario/NLP_Streamlit/actions/workflows/ci.yml/badge.svg)](https://github.com/tu-usuario/NLP_Streamlit/actions)
+[![CI](https://github.com/[TU-USUARIO]/NLP_Streamlit/actions/workflows/ci.yml/badge.svg)](https://github.com/[TU-USUARIO]/NLP_Streamlit/actions)
 
 ---
 
 ## 📸 Demo
 
-![Demo de la aplicación](Docs/InterfazNueva.png)
+| Interfaz Streamlit |
+|------------------|
+| ![Demo](Docs/InterfazNueva.png) |
+
+_Screenshot de la interfaz en acción_
+
+<!-- Vista remota (GitHub): -->
+<!-- ![Demo](https://raw.githubusercontent.com/tu-usuario/NLP_Streamlit/main/Docs/InterfazNueva.png) -->
 
 ---
 
@@ -31,7 +38,7 @@ ollama serve
 streamlit run interface/demo_app.py
 ```
 
-_¿Fácil?:_arrow_right: Abre **http://localhost:8501** y listo.
+¿Fácil?:_arrow_right: Abre **http://localhost:8501** y listo.
 
 ---
 
@@ -498,33 +505,33 @@ Todos los cambios notables de este proyecto se documentan en este archivo.
 
 Este proyecto adhere al Covenant de Contributor. Al participar, te comprometes a uphold este código.
 
-### Our Pledge
+### Nuestro Compromiso
 
-Nosotros como miembros, líderes y contribuidores pledge a hacer de la participación en nuestra comunidad una experiencia libre de acoso para todos.
+Nosotros, como miembros, líderes y contribuidores, comprometemos a hacer de la participación en nuestra comunidad una experiencia libre de acoso para todos.
 
-### Our Standards
+### Nuestras Responsabilidades
 
-Ejemplos de comportamiento que contribuyen a un ambiente positivo:
+Los líderes del proyecto son responsables de clarificar los estándares de comportamiento aceptable y deben tomar acción correctiva apropiada ante instancias de comportamiento inaceptable.
+
+### Nuestro Código
+
+**positivos:**
 - ✅ Usar lenguaje acogedor e inclusivo
 - ✅ Respetar opiniones y experiencias diferentes
 - ✅ Aceptar críticas constructivas con gracia
 - ✅ Enfocarse en lo que es mejor para la comunidad
 - ✅ Mostrar empatía hacia otros miembros
 
-Ejemplos de comportamiento inaceptable:
+**negativos:**
 - ❌ Comentarios acosadores o discriminatorios
 - ❌ Comentarios insultantes o degradantes
 - ❌ Ataques personales o políticos
 - ❌ Acoso público o privado
 - ❌ Información privada de otros sin permiso
 
-### Our Responsibilities
+### Aplicación
 
-Los líderes del proyecto son responsables de clarificar los estándares de comportamiento aceptable y deben tomar acción correctiva apropiada ante instancias de comportamiento inaceptable.
-
-### Enforcement
-
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the community leaders at tu@email.com. All complaints will be reviewed and investigated fairly.
+Instancias de comportamiento abusivo, acosador o inaceptable pueden ser reportadas a los líderes del proyecto en **[tu@email.com]**. Todas las quejas serán revisadas e investigadas de manera justa.
 
 ---
 
