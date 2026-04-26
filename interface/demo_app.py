@@ -115,9 +115,7 @@ def formatear_valor(valor):
 IDIOMAS = {
     "ES": "Español",
     "EN": "English",
-    "DE": "Deutsch",
-    "PT": "Português",
-    "FR": "Français"
+    "DE": "Deutsch"
 }
 
 TEXTOS = {
@@ -150,26 +148,6 @@ TEXTOS = {
         "intencion": "Absicht",
         "resumen": "Zusammenfassung",
         "clasificacion": "Klassifizierung"
-    },
-    "PT": {
-        "titulo": "Análise de Texto com IA",
-        "entrada": "Texto de entrada",
-        "analizar": "ANALISAR",
-        "sentimiento": "Sentimento",
-        "entidades": "Entidades (NER)",
-        "intencion": "Intenção",
-        "resumen": "Resumo",
-        "clasificacao": "Classificação"
-    },
-    "FR": {
-        "titulo": "Analyse de Texte IA",
-        "entrada": "Texte d'entrée",
-        "analyser": "ANALYSER",
-        "sentiment": "Sentiment",
-        "entites": "Entités (NER)",
-        "intention": "Intention",
-        "resumen": "Résumé",
-        "classification": "Classification"
     }
 }
 

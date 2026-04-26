@@ -45,7 +45,7 @@ def limpiar_respuesta_json(contenido: str) -> dict:
         if json_lines:
             texto_json = '\n'.join(json_lines)
             return json.loads(texto_json)
-    except Exception:
+    except json.JSONDecodeError:
         pass
     
     # 6. Si no se puede parsear, devolver lo queTenemos
