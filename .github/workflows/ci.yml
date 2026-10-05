@@ -23,9 +23,10 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
+    # Las versiones estan fijadas aqui y en requirements.txt: deben coincidir
     - name: Install dependencies
       run: |
-        pip install --only-binary :all: -r requirements.txt
+        pip install --only-binary :all: openai==3.24.0 python-dotenv==1.2.4 streamlit==1.65.0 requests==2.34.2 pytest==9.1.1 pytest-cov==7.1.0 ruff==0.16.10 bandit==1.9.4
 
     - name: Run linter (ruff)
       run: |
