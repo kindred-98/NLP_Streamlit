@@ -27,42 +27,52 @@ def formatear_salida_cli(resultados: dict) -> str:
     # Sentimiento
     sent = resultados.get("sentimiento", {})
     emoji = _emoji(EMOJI_SENTIMIENTO, sent.get("sentimiento"), "😐")
-    lines.append(f"  {emoji} SENTIMIENTO: {sent.get('sentimiento', 'N/A').upper()}")
-    lines.append(f"     Puntuación: {sent.get('puntuacion', 'N/A')}")
-    lines.append(f"     Emociones: {', '.join(sent.get('emociones', [])) or 'Ninguna'}")
-    lines.append(f"     Confianza: {sent.get('confianza', 'N/A')}")
-    lines.append("")
+    lines.extend([
+        f"  {emoji} SENTIMIENTO: {sent.get('sentimiento', 'N/A').upper()}",
+        f"     Puntuación: {sent.get('puntuacion', 'N/A')}",
+        f"     Emociones: {', '.join(sent.get('emociones', [])) or 'Ninguna'}",
+        f"     Confianza: {sent.get('confianza', 'N/A')}",
+        "",
+    ])
     
     # Entidades
     ent = resultados.get("entidades", {})
     otros = ent.get("otros", [])
-    lines.append(f"  🏷️ ENTIDADES: {', '.join(otros) if otros else 'Ninguna'}")
-    lines.append("")
+    lines.extend([
+        f"  🏷️ ENTIDADES: {', '.join(otros) if otros else 'Ninguna'}",
+        "",
+    ])
     
     # Intención
     inte = resultados.get("intencion", {})
     urgency = inte.get("urgencia", "N/A")
     emoji_urg = _emoji(EMOJI_URGENCIA, urgency, "🟢")
-    lines.append(f"  🎯 INTENCIÓN: {inte.get('intencion_principal', 'N/A').upper()}")
-    lines.append(f"     {emoji_urg} Urgencia: {urgency.upper()}")
-    lines.append("")
+    lines.extend([
+        f"  🎯 INTENCIÓN: {inte.get('intencion_principal', 'N/A').upper()}",
+        f"     {emoji_urg} Urgencia: {urgency.upper()}",
+        "",
+    ])
     
     # Clasificación
     clas = resultados.get("clasificacion", {})
-    lines.append("  🗂️ CLASIFICACIÓN:")
-    lines.append(f"     Tema: {clas.get('tema', 'N/A').upper()}")
-    lines.append(f"     Tipo: {clas.get('tipo', 'N/A').upper()}")
-    lines.append(f"     Canal: {clas.get('canal_adecuado', 'N/A').upper()}")
-    lines.append(f"     Prioridad: {clas.get('prioridad', 'N/A')}")
-    lines.append("")
+    lines.extend([
+        "  🗂️ CLASIFICACIÓN:",
+        f"     Tema: {clas.get('tema', 'N/A').upper()}",
+        f"     Tipo: {clas.get('tipo', 'N/A').upper()}",
+        f"     Canal: {clas.get('canal_adecuado', 'N/A').upper()}",
+        f"     Prioridad: {clas.get('prioridad', 'N/A')}",
+        "",
+    ])
     
     # Resumen
     res = resultados.get("resumen", {})
     resumen_raw = res.get("raw", "")[:200] if res.get("raw") else "N/A"
-    lines.append("  📝 RESUMEN:")
     # Limitar a primer párrafo
     primer_parrafo = resumen_raw.split('\n')[0][:150]
-    lines.append(f"     {primer_parrafo}...")
+    lines.extend([
+        "  📝 RESUMEN:",
+        f"     {primer_parrafo}...",
+    ])
     
     return "\n".join(lines)
 

@@ -30,8 +30,9 @@ class TestAnalizarTexto:
 
     def test_texto_none_lanza_error(self):
         """Texto None lanza ValueError."""
+        texto = cast(str, None)
         with pytest.raises(ValueError):
-            analizar_texto(cast(str, None))
+            analizar_texto(texto)
 
     def test_error_en_analisis_retorna_error_dict(self):
         """Error retorna dict con error y estructura."""

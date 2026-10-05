@@ -111,7 +111,7 @@ class TestLeerJson:
         with patch('almacenamiento.leer.CARPETA_JSON') as mock_carpeta:
             mock_carpeta.__truediv__.return_value = mock_ruta
             with pytest.raises(json.JSONDecodeError):
-                json.loads(mock_ruta.read_text())
+                leer_json("archivo.json")
 
 
 class TestBuscarPorFecha:
