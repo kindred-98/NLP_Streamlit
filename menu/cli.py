@@ -2,6 +2,23 @@
 
 from src.analizador import analizar_texto
 
+EMOJI_SENTIMIENTO = {
+    "positivo": "😊",
+    "negativo": "😔",
+    "neutro": "😐",
+}
+
+EMOJI_URGENCIA = {
+    "alta": "🔴",
+    "media": "🟡",
+    "baja": "🟢",
+}
+
+
+def _emoji(mapa: dict, valor, por_defecto: str) -> str:
+    """Devuelve el emoji asociado a un valor de forma segura."""
+    return mapa.get(str(valor), por_defecto)
+
 
 def formatear_salida_cli(resultados: dict) -> str:
     """Formatea los resultados de forma limpia y legible."""
@@ -9,7 +26,7 @@ def formatear_salida_cli(resultados: dict) -> str:
     
     # Sentimiento
     sent = resultados.get("sentimiento", {})
-    emoji = "😊" if sent.get("sentimiento") == "positivo" else "😔" if sent.get("sentimiento") == "negativo" else "😐"
+    emoji = _emoji(EMOJI_SENTIMIENTO, sent.get("sentimiento"), "😐")
     lines.append(f"  {emoji} SENTIMIENTO: {sent.get('sentimiento', 'N/A').upper()}")
     lines.append(f"     Puntuación: {sent.get('puntuacion', 'N/A')}")
     lines.append(f"     Emociones: {', '.join(sent.get('emociones', [])) or 'Ninguna'}")
@@ -25,7 +42,7 @@ def formatear_salida_cli(resultados: dict) -> str:
     # Intención
     inte = resultados.get("intencion", {})
     urgency = inte.get("urgencia", "N/A")
-    emoji_urg = "🔴" if urgency == "alta" else "🟡" if urgency == "media" else "🟢"
+    emoji_urg = _emoji(EMOJI_URGENCIA, urgency, "🟢")
     lines.append(f"  🎯 INTENCIÓN: {inte.get('intencion_principal', 'N/A').upper()}")
     lines.append(f"     {emoji_urg} Urgencia: {urgency.upper()}")
     lines.append("")

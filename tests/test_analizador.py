@@ -1,6 +1,7 @@
 """Tests para src/analizador.py - Punto de entrada principal."""
 
 import pytest
+from typing import cast
 from unittest.mock import patch
 from src.analizador import analizar_texto
 
@@ -30,7 +31,7 @@ class TestAnalizarTexto:
     def test_texto_none_lanza_error(self):
         """Texto None lanza ValueError."""
         with pytest.raises(ValueError):
-            analizar_texto(None)
+            analizar_texto(cast(str, None))
 
     def test_error_en_analisis_retorna_error_dict(self):
         """Error retorna dict con error y estructura."""

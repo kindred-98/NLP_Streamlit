@@ -67,48 +67,80 @@ st.markdown(theme_script, unsafe_allow_html=True)
 DIV_CLOSE = '</div>'
 ESTADO_MODELO = '### Estado del Modelo'
 CARD_MODELO = '<div class="card-modelo">'
+LIMITE_RAW = 250
+CLAVES_OCULTAS = ("error", "raw")
+SIN_DATOS = "N/A"
+NO_DISPONIBLE = "No disponible"
+
+
+def _texto_limpio(valor: dict) -> str:
+    """Devuelve el texto plano del campo 'raw' recortado."""
+    texto = valor.get("raw", "")
+    texto = texto.replace("\n", " ").replace("  ", " ").strip()
+    if len(texto) > LIMITE_RAW:
+        return texto[:LIMITE_RAW] + "..."
+    return texto
+
+
+def _valor_simple(valor) -> str:
+    """Convierte un escalar o lista en texto legible."""
+    if isinstance(valor, list):
+        return ", ".join(str(v) for v in valor)
+    return str(valor)
+
+
+def _partes_de(mapa: dict) -> list:
+    """Genera 'clave: valor' omitiendo valores vacíos y claves internas."""
+    partes = []
+    for clave, valor in mapa.items():
+        if clave in CLAVES_OCULTAS or not valor:
+            continue
+        partes.append(f"{clave}: {_valor_simple(valor)}")
+    return partes
+
+
+def _unir_partes(partes: list) -> str:
+    """Une las partes generadas o devuelve el marcador de ausencia."""
+    return " | ".join(partes) if partes else SIN_DATOS
+
+
+def _formatear_entrada(clave, item) -> str:
+    """Formatea una entrada 'clave: valor', aplanando diccionarios anidados."""
+    if isinstance(item, dict):
+        internas = _partes_de(item)
+        if not internas:
+            return ""
+        return f"{clave}: {' | '.join(internas)}"
+    return f"{clave}: {_valor_simple(item)}"
+
+
+def _formatear_diccionario(valor: dict) -> str:
+    """Formatea un diccionario de resultados."""
+    if valor.get("raw"):
+        return _texto_limpio(valor)
+    if valor.get("error"):
+        return NO_DISPONIBLE
+    if not valor:
+        return SIN_DATOS
+
+    partes = [
+        _formatear_entrada(clave, item)
+        for clave, item in valor.items()
+        if item and clave not in CLAVES_OCULTAS
+    ]
+    return _unir_partes([parte for parte in partes if parte])
 
 
 def formatear_valor(valor):
     """Formatea un valor para que sea legible."""
     if isinstance(valor, dict):
-        if valor.get("raw"):
-            texto = valor.get("raw", "")
-            texto = texto.replace("\n", " ").replace("  ", " ").strip()
-            return texto[:250] + ("..." if len(texto) > 250 else "")
-        if valor.get("error"):
-            return "No disponible"
-        if not valor:
-            return "N/A"
-        
-        for key, val in valor.items():
-            if isinstance(val, dict):
-                partes = []
-                for k, v in val.items():
-                    if v and k not in ["error", "raw"]:
-                        if isinstance(v, list) and v:
-                            partes.append(f"{k}: {', '.join(str(x) for x in v)}")
-                        else:
-                            partes.append(f"{k}: {v}")
-                return " | ".join(partes) if partes else "N/A"
-        
-        partes = []
-        for k, v in valor.items():
-            if v and k not in ["error", "raw"]:
-                if isinstance(v, list) and v:
-                    partes.append(f"{k}: {', '.join(str(x) for x in v)}")
-                else:
-                    partes.append(f"{k}: {v}")
-        return " | ".join(partes) if partes else "N/A"
-    
+        return _formatear_diccionario(valor)
     if isinstance(valor, list):
         if not valor:
-            return "N/A"
-        return ", ".join([str(v) for v in valor])
-    
+            return SIN_DATOS
+        return _valor_simple(valor)
     if valor is None or valor == "":
-        return "N/A"
-    
+        return SIN_DATOS
     return str(valor)
 
 

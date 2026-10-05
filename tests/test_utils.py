@@ -1,5 +1,7 @@
 """Tests para src/utils.py - Utilidades de parsing y validación."""
 
+from typing import cast
+
 from src.utils import (
     limpiar_respuesta_json, validar_texto, formatear_resultado,
     parsear_respuesta_fallback
@@ -222,7 +224,7 @@ class TestValidarTexto:
 
     def test_texto_none(self):
         """Texto None."""
-        assert not validar_texto(None)
+        assert not validar_texto(cast(str, None))
 
     def test_texto_newlines(self):
         """Texto con newlines."""
@@ -258,5 +260,5 @@ class TestFormatearResultado:
     def test_formatear_lista_retorna_json(self):
         """Formatea lista (se convierte a JSON string)."""
         data = [1, 2, 3]
-        resultado = formatear_resultado(data)
+        resultado = formatear_resultado(cast(dict, data))
         assert isinstance(resultado, str)

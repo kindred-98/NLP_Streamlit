@@ -22,7 +22,7 @@ def mostrar_menu_modelos():
     print("\n" + "-" * 50)
 
 
-def seleccionar_modelo() -> str:
+def seleccionar_modelo() -> str | None:
     """Permite seleccionar el modelo."""
     mostrar_menu_modelos()
     opcion = input("Modelo [1-2]: ").strip()

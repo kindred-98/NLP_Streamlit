@@ -98,11 +98,11 @@ section[data-testid="stSidebar"] {
     border-color: #0066cc;
 }
 
-/* Buttons - always red */
+/* Buttons - always red (backgrounds chosen for 4.5:1 contrast with white text) */
 div.stButton > button,
 div[data-testid="stFormSubmitButton"] > button {
-    background-color: #ff4b4b !important;
-    color: white !important;
+    background-color: #c62828 !important;
+    color: #ffffff !important;
     border-radius: 10px;
     height: 50px;
     width: 100%;
@@ -112,7 +112,7 @@ div[data-testid="stFormSubmitButton"] > button {
 
 div.stButton > button:hover,
 div[data-testid="stFormSubmitButton"] > button:hover {
-    background-color: #ff2e2e !important;
+    background-color: #991b1b !important;
 }
 
 /* Cards */
